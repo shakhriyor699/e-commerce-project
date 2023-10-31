@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { getCurrentUser } from '@/actions/getCurrentUser'
+import Provider from '@/components/Provider'
+import Navbar from '@/components/Navbar'
+
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -17,14 +19,19 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
 
-  const currentuser = await getCurrentUser()
-
-
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
+        <Provider>
+          <div className="bg-blue-900 min-h-screen flex">
+            <Navbar />
+            <div className="bg-white flex-grow mt-1 mr-1 mb-2 rounded-lg p-4">
+              {children}
+            </div>
+          </div>
+
+
+        </Provider>
       </body>
     </html>
   )

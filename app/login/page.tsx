@@ -4,12 +4,10 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { FC } from "react"
 
-interface LoginProps {
-  currentuser: User
-}
 
 
-const Login: FC<LoginProps> = ({ currentuser }) => {
+
+const Login = () => {
   const router = useRouter()
 
   return (
