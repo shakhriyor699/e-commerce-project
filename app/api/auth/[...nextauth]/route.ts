@@ -14,23 +14,31 @@ export const authOptions: AuthOptions = NextAuth({
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: 'username', type: 'text' },
-        password: { label: 'password', type: 'password' },
+        name: { label: 'name', type: 'text' },
+        hashedPassword: { label: 'hashedPassword', type: 'password' }
       },
       async authorize(credentials) {
 
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials?.email
+            name: credentials?.name
           }
         })
-        // if (!user) {
-        //   throw new Error('User not found');
-        // }
+        if (!user) {
+          throw new Error('User not found');
+        }
         return user
       }
     })
-  ]
+  ],
+  pages: {
+    signIn: '/',
+  },
+  debug: process.env.NODE_ENV === 'development',
+  session: {
+    strategy: 'jwt',
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 })
 
 export { authOptions as GET, authOptions as POST }
