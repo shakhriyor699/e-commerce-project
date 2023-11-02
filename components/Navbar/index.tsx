@@ -7,7 +7,6 @@ const Navbar = () => {
   const inactiveLink = 'flex  gap-2 mb-4 p-2'
   const activeLink = inactiveLink + ' bg-white text-black rounded-l-lg'
   const pathName = usePathname()
-  console.log(pathName);
 
 
   return (

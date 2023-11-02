@@ -6,11 +6,15 @@ import prisma from "@/libs/prisma"
 export const POST = async (req: Request) => {
   const currentUser = await getCurrentUser()
 
+
   if (!currentUser) {
     return NextResponse.error()
   }
 
+
   const body = await req.json()
+
+
   const {
     name,
     description,
@@ -22,7 +26,7 @@ export const POST = async (req: Request) => {
       name,
       description,
       price,
-      userId: currentUser.id
+      userId: currentUser.id,
     }
   })
 

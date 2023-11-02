@@ -13,8 +13,9 @@ datasource db {
 model User {
   id             String    @id @default(uuid())
   name           String?   @unique
-  email          String?   @unique
-  hashedPassword String
+  email          String    @unique
+  hashedPassword String?
+  emailVerified  DateTime?
   image          String?
   accounts       Account[]
   Product        Product[]
@@ -42,7 +43,7 @@ model Product {
   id          String @id @default(cuid())
   name        String
   description String
-  price       Float
+  price       Int
+  userId      String @unique
   user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
 }
