@@ -17,6 +17,7 @@ model User {
   hashedPassword String?
   emailVerified  DateTime?
   image          String?
+  role           String    @unique
   accounts       Account[]
   Product        Product[]
 }

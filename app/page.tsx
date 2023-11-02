@@ -9,6 +9,9 @@ export default function Home() {
   const { data: session } = useSession()
   const router = useRouter()
 
+  
+  
+
   return (
     <div className="text-blue-900 flex justify-between">
       <h2> Hello, <b>{session?.user?.name}</b></h2>
@@ -18,6 +21,7 @@ export default function Home() {
         </svg>
         }
         {session?.user?.name}
+       
       </div>
     </div>
   )

@@ -15,7 +15,7 @@ const Login = () => {
       ...data,
       redirect: false
     })
-    router.refresh()
+    router.push('/')
   }
 
   return (
@@ -26,9 +26,9 @@ const Login = () => {
           <label className="block text-left font-bold" htmlFor="username">Username:</label>
           <input {...register('name')} className="w-full p-3 mt-1 mb-2 border-2 border-gray-100 rounded-md focus:outline-none" type="text" id="name" placeholder="Enter Username" required />
         </div>
-      
+
         <div className="input-group">
-         
+
           <label className="block text-left font-bold" htmlFor="password">Password:</label>
           <input {...register('hashedPassword')} className="w-full p-3 mt-1 mb-2 border-2 border-gray-100 rounded-md focus:outline-none" type="password" id="hashedPassword" placeholder="Enter Password" required />
         </div>

@@ -1,22 +1,30 @@
+'use server'
 import prisma from "@/libs/prisma"
+import { redirect } from 'next/navigation'
 
 
-type UserData = {
-  name: string
-  email: string
-  hashedPassword: string
-}
 
-const createUser = async (userData: UserData) => {
-  const { name, email, hashedPassword } = userData
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      hashedPassword
+const createUser = async () => {
+  const findUser = await prisma.user.findUnique({
+    where: {
+      name: 'Shakhriyor'
     }
   })
 
+  
+
+  if (findUser) {
+    return findUser
+  }
+  const user = await prisma.user.create({
+    data: {
+      name: 'Shakhriyor',
+      email: 'shakhriyor1156@gmail.com',
+      hashedPassword: 'admin123',
+      role: 'superadmin'
+    }
+  })
+  // redirect('/login')
   return user
 }
 

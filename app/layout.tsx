@@ -4,8 +4,8 @@ import './globals.css'
 import Provider from '@/components/Provider'
 import Navbar from '@/components/Navbar'
 import { getSession } from '@/actions/getCurrentUser'
-import Login from '@/components/login/login'
 import createUser from '@/actions/createUser'
+import { redirect } from 'next/navigation'
 
 
 
@@ -25,24 +25,28 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await getSession()
-
-
+  
+  
+  
+  
+  // if (session) {
+  //   await createUser()
+  //   redirect('/login')
+  // }
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        {
-          !session ? <Login /> : (
-            <Provider>
-              <div className="bg-blue-900 min-h-screen flex">
-                <Navbar />
-                <div className="bg-white flex-grow mt-1 mr-1 mb-2 rounded-lg p-4">
-                  {children}
-                </div>
-              </div>
-            </Provider>
-          )
-        }
+        <Provider>
+          <div className="bg-blue-900 min-h-screen flex">
+            <Navbar />
+            <div className="bg-white flex-grow mt-1 mr-1 mb-2 rounded-lg p-4">
+              {children}
+            </div>
+          </div>
+        </Provider>
+
+
       </body>
     </html>
   )
