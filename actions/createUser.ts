@@ -1,6 +1,5 @@
-'use server'
+
 import prisma from "@/libs/prisma"
-import { redirect } from 'next/navigation'
 
 
 

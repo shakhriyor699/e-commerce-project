@@ -4,6 +4,8 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/libs/prisma"
 
+const adminEmails = ['shakhriyor1156@gmail.com'];
+
 export const authOptions: AuthOptions = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -31,6 +33,7 @@ export const authOptions: AuthOptions = NextAuth({
       }
     })
   ],
+  
   pages: {
     signIn: '/',
   },

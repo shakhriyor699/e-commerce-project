@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar'
 import { getSession } from '@/actions/getCurrentUser'
 import createUser from '@/actions/createUser'
 import { redirect } from 'next/navigation'
+import { NextResponse } from 'next/server'
 
 
 
@@ -26,14 +27,8 @@ export default async function RootLayout({
 }) {
   const session = await getSession()
   
+  await createUser()
   
-  
-  
-  // if (session) {
-  //   await createUser()
-  //   redirect('/login')
-  // }
-
   return (
     <html lang="en">
       <body className={inter.className}>
