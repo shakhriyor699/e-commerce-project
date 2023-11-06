@@ -1,6 +1,6 @@
 'use client'
 import { User } from "@prisma/client"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import '../globals.css'
@@ -10,13 +10,21 @@ import '../globals.css'
 const Login = () => {
   const router = useRouter()
   const { register, handleSubmit } = useForm()
+  const session = useSession()
+
+  console.log(session);
+
+
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    signIn('credentials', {
+    const result = await signIn('credentials', {
       ...data,
       redirect: false
     })
-    router.push('/')
+    if (result?.ok) {
+      router.push('/')
+      router.refresh()
+    }
   }
 
   return (

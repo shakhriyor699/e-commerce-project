@@ -1,19 +1,19 @@
 'use client'
-
 import Navbar from "@/components/Navbar"
-import { signIn, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 export default function Home() {
-  const { data: session } = useSession()
+  const {data: session, status} = useSession()
   const router = useRouter()
 
- 
-  
+  console.log(session);
 
-  
-  
+
+  if (status === 'unauthenticated') {
+    return router.push('/login')
+  }
 
   return (
     <div className="text-blue-900 flex justify-between">
@@ -24,7 +24,6 @@ export default function Home() {
         </svg>
         }
         {session?.user?.name}
-       
       </div>
     </div>
   )

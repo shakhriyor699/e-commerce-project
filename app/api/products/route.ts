@@ -5,12 +5,14 @@ import prisma from "@/libs/prisma"
 
 export const POST = async (req: Request) => {
   const currentUser = await getCurrentUser()
-
-
+  
+  
+  
   if (!currentUser) {
     return NextResponse.error()
   }
-
+  
+  console.log(currentUser?.id);
 
   const body = await req.json()
 

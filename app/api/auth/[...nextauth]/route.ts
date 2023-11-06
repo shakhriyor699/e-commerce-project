@@ -20,10 +20,13 @@ export const authOptions: AuthOptions = NextAuth({
         hashedPassword: { label: 'hashedPassword', type: 'password' }
       },
       async authorize(credentials) {
+        if(!credentials) {
+          throw new Error('Credentials not found');
+        }
 
         const user = await prisma.user.findUnique({
           where: {
-            name: credentials?.name
+            name: credentials.name
           }
         })
         if (!user) {
@@ -33,9 +36,8 @@ export const authOptions: AuthOptions = NextAuth({
       }
     })
   ],
-  
   pages: {
-    signIn: '/',
+    signIn: '/login',
   },
   debug: process.env.NODE_ENV === 'development',
   session: {

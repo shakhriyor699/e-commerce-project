@@ -1,12 +1,11 @@
-import type { Metadata } from 'next'
+import type { Metadata, NextPageContext } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Provider from '@/components/Provider'
 import Navbar from '@/components/Navbar'
 import { getSession } from '@/actions/getCurrentUser'
 import createUser from '@/actions/createUser'
-import { redirect } from 'next/navigation'
-import { NextResponse } from 'next/server'
+
 
 
 
@@ -26,15 +25,14 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await getSession()
-  
-  await createUser()
-  
+  // await createUser()
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <Provider>
           <div className="bg-blue-900 min-h-screen flex">
-            <Navbar />
+            {session?.user && <Navbar />}
             <div className="bg-white flex-grow mt-1 mr-1 mb-2 rounded-lg p-4">
               {children}
             </div>
