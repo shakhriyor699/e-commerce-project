@@ -41,8 +41,7 @@ export const authOptions: AuthOptions = NextAuth({
   debug: process.env.NODE_ENV === 'development',
   session: {
     strategy: 'jwt',
-    maxAge: 1800,
-    expire: 1000 * 60 * 60
+    maxAge: 1800
   },
   secret: process.env.NEXTAUTH_SECRET,
 })

@@ -35,6 +35,7 @@ const ProductsNewPage = () => {
     setLoading(false)
     reset()
     router.push('/products')
+    router.refresh()
   }
 
 

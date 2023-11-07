@@ -1,3 +1,4 @@
+import { getProductById } from "@/actions/getProductById"
 import ProductEdit from "@/components/Products/ProductEdit"
 import { FC } from "react"
 
@@ -8,15 +9,14 @@ interface EditIdPageProps {
 }
 
 
-const EditIdPage: FC<EditIdPageProps> = ({ params }) => {
-  const { editId } = params
-
+const EditIdPage: FC<EditIdPageProps> = async ({ params }) => {
+  const productById = await getProductById(params.editId)
 
 
   return (
     <div>
       edit product form here
-      <ProductEdit editId={editId} />
+      <ProductEdit productById={productById} />
     </div>
   )
 }
