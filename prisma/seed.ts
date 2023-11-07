@@ -1,26 +1,25 @@
-import prisma from "@/libs/prisma";
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 
 const main = async () => {
-  const user = await prisma.user.create({
-    data: {
-      name: 'Shakhriyor',
-      email: 'shakhriyor1156@gmail.com',
-      hashedPassword: 'admin123',
-      role: 'superadmin'
-    }
-  })
+  try {
+    await prisma.user.create({
+      data: {
+        name: 'Shakhriyor',
+        email: 'shakhriyor1156@gmail.com',
+        hashedPassword: 'admin123',
+        role: 'superadmin'
+      }
+    })
+  } catch (error) {
+
+  } finally {
+    await prisma.$disconnect()
+  }
 }
 
 main()
-  .then(() => {
-    console.log('User created')
-  })
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
-  
+
+

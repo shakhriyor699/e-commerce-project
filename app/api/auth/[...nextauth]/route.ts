@@ -4,7 +4,6 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/libs/prisma"
 
-const adminEmails = ['shakhriyor1156@gmail.com'];
 
 export const authOptions: AuthOptions = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -20,7 +19,7 @@ export const authOptions: AuthOptions = NextAuth({
         hashedPassword: { label: 'hashedPassword', type: 'password' }
       },
       async authorize(credentials) {
-        if(!credentials) {
+        if (!credentials) {
           throw new Error('Credentials not found');
         }
 
@@ -42,6 +41,8 @@ export const authOptions: AuthOptions = NextAuth({
   debug: process.env.NODE_ENV === 'development',
   session: {
     strategy: 'jwt',
+    maxAge: 1800,
+    expire: 1000 * 60 * 60
   },
   secret: process.env.NEXTAUTH_SECRET,
 })

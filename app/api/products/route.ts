@@ -5,13 +5,13 @@ import prisma from "@/libs/prisma"
 
 export const POST = async (req: Request) => {
   const currentUser = await getCurrentUser()
-  
-  
-  
+
+
+
   if (!currentUser) {
     return NextResponse.error()
   }
-  
+
   console.log(currentUser?.id);
 
   const body = await req.json()
@@ -28,10 +28,20 @@ export const POST = async (req: Request) => {
       name,
       description,
       price,
-      userId: currentUser.id,
+      userId: currentUser.id
     }
   })
 
 
   return NextResponse.json(product)
+}
+
+export const GET = async () => {
+  const currentUser = await getCurrentUser()
+  const products = await prisma.product.findMany({
+    where: {
+      userId: currentUser?.id
+    }
+  })
+  return NextResponse.json(products)
 }
