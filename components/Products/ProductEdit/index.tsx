@@ -1,6 +1,8 @@
 'use client'
 import { SafeProduct } from "@/app/types";
 import { yupResolver } from "@hookform/resolvers/yup"
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { FC, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as yup from "yup";
@@ -18,6 +20,7 @@ const schema = yup.object().shape({
 const ProductEdit: FC<ProductEditProps> = ({ productById }) => {
 
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
   const { register, handleSubmit, setValue, reset } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -29,9 +32,22 @@ const ProductEdit: FC<ProductEditProps> = ({ productById }) => {
 
   console.log(productById);
 
+  const onSubmit = async (data: any) => {
+    setLoading(true)
+    const newData = {
+      ...data,
+      price: Number(data.price)
+    }
+    await axios.patch(`/api/products/${productById?.id}`, newData)
+    setLoading(false)
+    reset()
+    router.push('/products')
+    router.refresh()
+  }
+
   return (
     <>
-      <form >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <h1 className="text-blue-900 mb-2 text-xl">Edit product</h1>
         <label>Product name</label>
         <input {...register('name', { required: "Please enter product name" })} type="text" placeholder="product name" />
