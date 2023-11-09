@@ -33,3 +33,24 @@ export const PATCH = async (req: Request, { params }: { params: { productId: str
     return NextResponse.error()
   }
 }
+
+export const DELETE = async (req: Request, { params }: { params: { productId: string } }) => {
+  const currentUser = await getCurrentUser()
+
+  if (!currentUser) {
+    return NextResponse.error()
+  }
+
+  try {
+    const product = await prisma.product.delete({
+      where: {
+        id: params.productId
+      }
+    })
+
+    return NextResponse.json(product)
+  } catch (error) {
+    return NextResponse.error()
+  }
+
+}

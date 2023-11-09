@@ -5,6 +5,7 @@ import Provider from '@/components/Provider'
 import Navbar from '@/components/Navbar'
 import { getSession } from '@/actions/getCurrentUser'
 import createUser from '@/actions/createUser'
+import ToasterProvider from './providers/ToasterProvider'
 
 
 
@@ -31,8 +32,9 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Provider>
+          <ToasterProvider />
           <div className="bg-blue-900 min-h-screen flex">
-            {session?.user && <Navbar />}
+            {session && <Navbar />}
             <div className="bg-white flex-grow mt-1 mr-1 mb-2 rounded-lg p-4">
               {children}
             </div>

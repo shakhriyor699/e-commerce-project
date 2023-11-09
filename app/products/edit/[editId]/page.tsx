@@ -15,7 +15,6 @@ const EditIdPage: FC<EditIdPageProps> = async ({ params }) => {
 
   return (
     <div>
-      edit product form here
       <ProductEdit productById={productById} />
     </div>
   )

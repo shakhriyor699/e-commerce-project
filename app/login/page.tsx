@@ -4,6 +4,7 @@ import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import '../globals.css'
+import toast from "react-hot-toast"
 
 
 
@@ -24,6 +25,10 @@ const Login = () => {
     if (result?.ok) {
       router.push('/')
       router.refresh()
+      toast.success('Успешно авторизован')
+    }
+    if (result?.error) {
+      toast.error(result.error)
     }
   }
 
