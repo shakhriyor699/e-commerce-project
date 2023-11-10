@@ -11,7 +11,8 @@ interface ProductsItemProps {
 const ProductsItems: FC<ProductsItemProps> = ({ products }) => {
 
 
-
+  console.log(products);
+  
 
   return (
     <table className="basic mt-2">

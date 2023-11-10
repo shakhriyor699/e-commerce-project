@@ -8,6 +8,9 @@ export const getProducts = async () => {
     const products = await prisma.product.findMany({
       where: {
         userId: currentUser?.id
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     })
 
