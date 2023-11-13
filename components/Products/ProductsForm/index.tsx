@@ -112,24 +112,34 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
               // write your building UI
               <div className="upload__image-wrapper">
                 <button
+                  className="gap-2 h-24 border text-center flex items-center justify-center p-2"
                   type="button"
                   style={isDragging ? { color: 'red' } : undefined}
                   onClick={onImageUpload}
                   {...dragProps}
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                  </svg>
                   Click or Drop here
                 </button>
                 &nbsp;
-                <button onClick={onImageRemoveAll}>Remove all images</button>
-                {imageList.map((image, index) => (
-                  <div key={index} className="image-item">
-                    <Image src={`${image.dataURL}`} alt="" width={100} height={100} />
-                    <div className="image-item__btn-wrapper">
-                      <button onClick={() => onImageUpdate(index)}>Update</button>
-                      <button onClick={() => onImageRemove(index)}>Remove</button>
+                <button type="button" onClick={onImageRemoveAll}>Remove all images</button>
+                <div className="flex gap-7">
+                  {imageList.map((image, index) => (
+                    <div key={index} className="image-item relative w-max">
+                      <Image src={`${image.dataURL ? image.dataURL : productById?.imageSrc}`} alt="" width={200} height={200} />
+                      <div className="image-item__btn-wrapper">
+                        <button type='button' onClick={() => onImageUpdate(index)}>Update</button>
+                        <button className="absolute top-0 right-0" type='button' onClick={() => onImageRemove(index)}>
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </ImageUploading>

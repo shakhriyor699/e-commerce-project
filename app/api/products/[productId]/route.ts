@@ -14,7 +14,8 @@ export const PATCH = async (req: Request, { params }: { params: { productId: str
     const {
       name,
       description,
-      price
+      price,
+      imageSrc
     } = body
 
     const product = await prisma.product.update({
@@ -24,7 +25,8 @@ export const PATCH = async (req: Request, { params }: { params: { productId: str
       data: {
         name,
         description,
-        price
+        price,
+        imageSrc
       }
     })
 
