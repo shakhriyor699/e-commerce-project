@@ -12,8 +12,7 @@ export const POST = async (req: Request) => {
     return NextResponse.error()
   }
 
-  console.log(currentUser?.id);
-
+  
   const body = await req.json()
 
 

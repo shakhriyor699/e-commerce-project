@@ -9,6 +9,7 @@ import ImageUploading from 'react-images-uploading';
 import axios from "axios"
 import toast from "react-hot-toast"
 import Image from "next/image"
+import BeatLoader from "react-spinners/BeatLoader"
 
 interface ProductFormProps {
   productById?: SafeProduct | null
@@ -28,7 +29,7 @@ const schema = yup.object().shape({
 const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [images, setImages] = useState([]);
+  const [upLoading, setUpLoading] = useState(false)
   const { register, handleSubmit, reset, watch, setValue } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -42,7 +43,9 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
   const imageSrc = watch('imageSrc')
 
   const onChange = (imageList: any) => {
+    setUpLoading(true)
     setValue('imageSrc', imageList);
+    setUpLoading(false)
   };
 
 
@@ -109,10 +112,9 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
               isDragging,
               dragProps,
             }) => (
-              // write your building UI
-              <div className="upload__image-wrapper">
+              <div className={`upload__image-wrapper flex ${imageList.length > 0 && 'gap-4'}`}>
                 <button
-                  className="gap-2 h-24 border text-center flex items-center justify-center p-2"
+                  className="gap-2 h-32 border text-center flex items-center justify-center p-2 rounded-md bg-gray-200"
                   type="button"
                   style={isDragging ? { color: 'red' } : undefined}
                   onClick={onImageUpload}
@@ -124,22 +126,29 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
                   Click or Drop here
                 </button>
                 &nbsp;
-                <button type="button" onClick={onImageRemoveAll}>Remove all images</button>
-                <div className="flex gap-7">
-                  {imageList.map((image, index) => (
-                    <div key={index} className="image-item relative w-max">
-                      <Image src={`${image.dataURL ? image.dataURL : productById?.imageSrc}`} alt="" width={200} height={200} />
-                      <div className="image-item__btn-wrapper">
-                        <button type='button' onClick={() => onImageUpdate(index)}>Update</button>
-                        <button className="absolute top-0 right-0" type='button' onClick={() => onImageRemove(index)}>
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
+                {imageList.length > 0 && <button type="button" onClick={onImageRemoveAll}>Remove all images</button>}
+                {
+                  upLoading ? (
+                    <BeatLoader color="#36d7b7" />
+                  ) : (
+                    <div className="flex gap-7 -order-1">
+                      {imageList.map((image, index) => (
+                        <div key={index} className="image-item relative w-max">
+                          <Image src={`${image.dataURL ? image.dataURL : productById?.imageSrc}`} alt="" width={200} height={200} />
+                          <div className="image-item__btn-wrapper">
+                            <button type='button' onClick={() => onImageUpdate(index)}>Update</button>
+                            <button className="absolute top-0 right-0" type='button' onClick={() => onImageRemove(index)}>
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  )
+                }
+
               </div>
             )}
           </ImageUploading>
