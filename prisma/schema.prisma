@@ -20,6 +20,7 @@ model User {
   role           String    @unique
   accounts       Account[]
   Product        Product[]
+  
 }
 
 model Account {

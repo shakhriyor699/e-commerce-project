@@ -1,12 +1,17 @@
+import { getCategories } from '@/actions/getCategories'
 import CategoriesForm from '@/components/Categories/CategoriesForm'
+import CategoriesItem from '@/components/Categories/CategoriesItem'
 import React from 'react'
 
-const CategoriesPage = () => {
+const CategoriesPage = async () => {
+  const categories = await getCategories()
+
   return (
     <>
       <h1>Categories</h1>
-      <label htmlFor="New category name"></label>
-      <CategoriesForm />
+      <label>New category name</label>
+      <CategoriesForm categories={categories} />
+      <CategoriesItem categories={categories} />
     </>
   )
 }
