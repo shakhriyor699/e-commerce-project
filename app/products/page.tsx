@@ -7,6 +7,7 @@ import Link from 'next/link'
 
 const ProductsPage = async () => {
   const products = await getProducts()
+ 
   
 
 

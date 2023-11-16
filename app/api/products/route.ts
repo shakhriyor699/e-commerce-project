@@ -20,7 +20,8 @@ export const POST = async (req: Request) => {
     name,
     description,
     price,
-    imageSrc
+    imageSrc,
+    categoryId
   } = body
 
   const product = await prisma.product.create({
@@ -30,6 +31,7 @@ export const POST = async (req: Request) => {
       price,
       imageSrc,
       userId: currentUser.id,
+      categoryId: body.categoryId
     }
   })
 

@@ -37,15 +37,22 @@ export const POST = async (req: Request) => {
   const body = await req.json()
 
   const {
-    name,
-    id
+    name
   } = body
 
   const category = await prisma.category.create({
     data: {
-      name,
-      productId: id
+      name
     }
   })
   return NextResponse.json(category)
+}
+
+export const GET = async () => {
+  try {
+    const categories = await prisma.category.findMany({})
+    return  NextResponse.json(categories)
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }

@@ -2,7 +2,7 @@
 import { SafeProduct } from "@/app/types"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useRouter } from "next/navigation"
-import { FC, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as yup from "yup";
 import ImageUploading from 'react-images-uploading';
@@ -10,9 +10,12 @@ import axios from "axios"
 import toast from "react-hot-toast"
 import Image from "next/image"
 import BeatLoader from "react-spinners/BeatLoader"
+import { Category } from "@prisma/client"
+import { getCategories } from "@/actions/getCategories"
 
 interface ProductFormProps {
   productById?: SafeProduct | null
+  categories: Category[]
   edit?: boolean
   title: string
 }
@@ -21,7 +24,8 @@ const schema = yup.object().shape({
   name: yup.string().required(),
   description: yup.string().required(),
   price: yup.number().required(),
-  imageSrc: yup.array().required()
+  imageSrc: yup.array().required(),
+  categoryId: yup.string().required()
 }).required();
 
 
@@ -36,11 +40,26 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
       name: productById?.name || '',
       description: productById?.description || '',
       price: productById?.price || Number(),
-      imageSrc: productById?.imageSrc || []
+      imageSrc: productById?.imageSrc || [],
+      categoryId: productById?.categoryId || ''
     }
   })
 
   const imageSrc = watch('imageSrc')
+
+ useEffect(() => {
+   
+  const fetchCategories = async () => {
+    const { data } = await axios.get('/api/categories')
+    console.log(data);
+    
+    
+  }
+
+  fetchCategories()
+    
+ }, [])
+  
 
   const onChange = (imageList: any) => {
     setUpLoading(true)
@@ -72,6 +91,7 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
       try {
         const newData = {
           ...data,
+          categoryId: productById?.categoryId,
           price: Number(data.price),
           imageSrc: data.imageSrc.map((item: any) => {
             return item.dataURL
@@ -155,6 +175,14 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
         </div>
         <label>Product Description</label>
         <textarea {...register('description', { required: "Please enter your product description" })} placeholder="product description" />
+        <select className="mb-0" {...register('categoryId')} >
+          <option value="0">No parent category</option>
+          {/* {
+            categories.length > 0 && categories.map(category => (
+              <option key={category.id} value={category.id}>{category.name}</option>
+            ))
+          } */}
+        </select>
         <label>Product price</label>
         <input  {...register('price', { required: "Please enter price" })} type="number" placeholder="price" />
         <button {...{ disabled: loading }} className="btn-primary">{loading ? 'loading...' : edit ? 'Edit' : 'Create'}</button>

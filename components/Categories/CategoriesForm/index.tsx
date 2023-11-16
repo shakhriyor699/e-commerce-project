@@ -10,8 +10,7 @@ import * as yup from 'yup'
 
 
 const schema = yup.object().shape({
-  name: yup.string().required(),
-  id: yup.string()
+  name: yup.string().required()
 }).required();
 
 interface CategoriesFormProps {
@@ -22,18 +21,19 @@ const CategoriesForm: FC<CategoriesFormProps> = ({ categories }) => {
   const { register, handleSubmit, reset, setValue } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: '',
-      id: '0'
+      name: ''
     }
   })
   const router = useRouter()
 
-  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setValue('id', e.target.value)
-  }
+  console.log(categories);
+  
+
+  // const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  //   setValue('id', e.target.value)
+  // }
 
   const onSubmit = async (data: any) => {
-    console.log(data)
     
     try {
       await axios.post('/api/categories', data)
@@ -48,14 +48,14 @@ const CategoriesForm: FC<CategoriesFormProps> = ({ categories }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex gap-1 items-center'>
       <input {...register('name', { required: true })} className='mb-0' type="text" placeholder='Category name' />
-      <select className="mb-0" {...register('id')} onChange={handleSelectChange}>
+      {/* <select className="mb-0" {...register('id')} onChange={handleSelectChange}>
         <option value="0">No parent category</option>
         {
           categories.length > 0 && categories.map(category => (
             <option key={category.id} value={category.id}>{category.name}</option>
           ))
         }
-      </select>
+      </select> */}
       <button className='btn-primary py-1'>Save</button>
     </form>
   )
