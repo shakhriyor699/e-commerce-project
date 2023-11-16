@@ -10,12 +10,12 @@ interface CategoriesItemProps {
 
 const CategoriesItem: FC<CategoriesItemProps> = ({ categories }) => {
 
-  
   return (
     <table className='basic mt-5'>
       <thead>
         <tr>
           <td>Category Name</td>
+          <td>Category parent</td>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +23,7 @@ const CategoriesItem: FC<CategoriesItemProps> = ({ categories }) => {
           categories.length > 0 && categories.map(category => (
             <tr key={category.id}>
               <td>{category.name}</td>
+              {/* <td>{category?.parent }</td> */}
             </tr>
           ))
         }

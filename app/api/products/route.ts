@@ -12,7 +12,7 @@ export const POST = async (req: Request) => {
     return NextResponse.error()
   }
 
-  
+
   const body = await req.json()
 
 
@@ -29,7 +29,7 @@ export const POST = async (req: Request) => {
       description,
       price,
       imageSrc,
-      userId: currentUser.id
+      userId: currentUser.id,
     }
   })
 

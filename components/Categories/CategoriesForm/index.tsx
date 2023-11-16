@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Category } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { FC } from "react";
+import { ChangeEvent, FC } from "react";
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast";
 import * as yup from 'yup'
@@ -11,7 +11,7 @@ import * as yup from 'yup'
 
 const schema = yup.object().shape({
   name: yup.string().required(),
-  parentCategoryId: yup.number().required()
+  id: yup.string()
 }).required();
 
 interface CategoriesFormProps {
@@ -19,17 +19,21 @@ interface CategoriesFormProps {
 }
 
 const CategoriesForm: FC<CategoriesFormProps> = ({ categories }) => {
-  const { register, handleSubmit, reset } = useForm({
+  const { register, handleSubmit, reset, setValue } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       name: '',
-      parentCategoryId: 0
+      id: '0'
     }
   })
   const router = useRouter()
 
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setValue('id', e.target.value)
+  }
+
   const onSubmit = async (data: any) => {
-    console.log(data);
+    console.log(data)
     
     try {
       await axios.post('/api/categories', data)
@@ -41,15 +45,14 @@ const CategoriesForm: FC<CategoriesFormProps> = ({ categories }) => {
     }
   }
 
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex gap-1 items-center'>
       <input {...register('name', { required: true })} className='mb-0' type="text" placeholder='Category name' />
-      <select  className="mb-0">
+      <select className="mb-0" {...register('id')} onChange={handleSelectChange}>
         <option value="0">No parent category</option>
         {
           categories.length > 0 && categories.map(category => (
-           <option {...register('parentCategoryId')} key={category.id} value={category.id}>{category.name}</option>
+            <option key={category.id} value={category.id}>{category.name}</option>
           ))
         }
       </select>

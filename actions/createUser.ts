@@ -1,7 +1,4 @@
-
 import prisma from "@/libs/prisma"
-
-
 
 const createUser = async () => {
   const findUser = await prisma.user.findUnique({
@@ -10,7 +7,6 @@ const createUser = async () => {
     }
   })
 
-  
 
   if (findUser) {
     return findUser
