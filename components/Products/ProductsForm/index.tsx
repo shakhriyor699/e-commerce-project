@@ -11,7 +11,7 @@ import toast from "react-hot-toast"
 import Image from "next/image"
 import BeatLoader from "react-spinners/BeatLoader"
 import { Category } from "@prisma/client"
-import { getCategories } from "@/actions/getCategories"
+import { withSwal } from 'react-sweetalert2';
 
 interface ProductFormProps {
   productById?: SafeProduct | null
@@ -34,6 +34,7 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [upLoading, setUpLoading] = useState(false)
+  const [categories, setCategories] = useState<Category[]>([])
   const { register, handleSubmit, reset, watch, setValue } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -41,25 +42,23 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
       description: productById?.description || '',
       price: productById?.price || Number(),
       imageSrc: productById?.imageSrc || [],
-      categoryId: productById?.categoryId || ''
+      categoryId: productById?.categoryId || 'sss'
     }
   })
 
+  console.log(productById?.categoryId);
+
+
   const imageSrc = watch('imageSrc')
 
- useEffect(() => {
-   
-  const fetchCategories = async () => {
-    const { data } = await axios.get('/api/categories')
-    console.log(data);
-    
-    
-  }
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { data } = await axios.get('/api/categories')
+      setCategories(data)
+    }
+    fetchCategories()
+  }, [])
 
-  fetchCategories()
-    
- }, [])
-  
 
   const onChange = (imageList: any) => {
     setUpLoading(true)
@@ -79,7 +78,6 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
             return item.dataURL
           })
         }
-
         await axios.post('/api/products', newData)
         reset()
         toast.success('Товар успешно создан')
@@ -175,13 +173,14 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
         </div>
         <label>Product Description</label>
         <textarea {...register('description', { required: "Please enter your product description" })} placeholder="product description" />
-        <select className="mb-0" {...register('categoryId')} >
-          <option value="0">No parent category</option>
-          {/* {
+        <label>Categories</label>
+        <select className="mb-0"  {...register('categoryId')} >
+          {/* <option value="0">Uncategoryzed</option> */}
+          {
             categories.length > 0 && categories.map(category => (
               <option key={category.id} value={category.id}>{category.name}</option>
             ))
-          } */}
+          }
         </select>
         <label>Product price</label>
         <input  {...register('price', { required: "Please enter price" })} type="number" placeholder="price" />
