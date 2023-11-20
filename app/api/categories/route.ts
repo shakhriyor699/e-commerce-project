@@ -50,8 +50,12 @@ export const POST = async (req: Request) => {
 
 export const GET = async () => {
   try {
-    const categories = await prisma.category.findMany({})
-    return  NextResponse.json(categories)
+    const categories = await prisma.category.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+    return NextResponse.json(categories)
   } catch (error: any) {
     throw new Error(error)
   }

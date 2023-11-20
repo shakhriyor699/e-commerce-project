@@ -12,7 +12,6 @@ interface ProductEditProps {
 
 const ProductEdit: FC<ProductEditProps> = async ({ productById }) => {
   const categories = await getCategories()
-  console.log(categories);
   
   return (
     <>

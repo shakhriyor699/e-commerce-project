@@ -11,11 +11,11 @@ import toast from "react-hot-toast"
 import Image from "next/image"
 import BeatLoader from "react-spinners/BeatLoader"
 import { Category } from "@prisma/client"
-import { withSwal } from 'react-sweetalert2';
+
 
 interface ProductFormProps {
   productById?: SafeProduct | null
-  categories: Category[]
+  categories?: Category[]
   edit?: boolean
   title: string
 }
@@ -42,11 +42,9 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
       description: productById?.description || '',
       price: productById?.price || Number(),
       imageSrc: productById?.imageSrc || [],
-      categoryId: productById?.categoryId || 'sss'
+      categoryId: productById?.categoryId || ''
     }
   })
-
-  console.log(productById?.categoryId);
 
 
   const imageSrc = watch('imageSrc')
@@ -174,13 +172,14 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
         <label>Product Description</label>
         <textarea {...register('description', { required: "Please enter your product description" })} placeholder="product description" />
         <label>Categories</label>
-        <select className="mb-0"  {...register('categoryId')} >
-          {/* <option value="0">Uncategoryzed</option> */}
-          {
-            categories.length > 0 && categories.map(category => (
-              <option key={category.id} value={category.id}>{category.name}</option>
-            ))
-          }
+        <select className="mb-0"  {...register('categoryId')} name="categoryId" >
+          <option value="0">Uncategoryzed</option>
+          {categories.length > 0 &&
+            categories.map((category) => (
+              <option key={category.id} value={category.id} selected={category.id === productById?.categoryId}>
+                {category.name}
+              </option>
+            ))}
         </select>
         <label>Product price</label>
         <input  {...register('price', { required: "Please enter price" })} type="number" placeholder="price" />
