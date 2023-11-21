@@ -39,3 +39,16 @@ export const PATCH = async (req: Request, { params }: { params: { categoriesId: 
     return NextResponse.error()
   }
 }
+
+export const DELETE = async (req: Request, { params }: { params: { categoriesId: string } }) => {
+  try {
+    const category = await prisma.category.delete({
+      where: {
+        id: params.categoriesId
+      }
+    })
+    return NextResponse.json(category)
+  } catch (error) {
+    return NextResponse.error()
+  }
+}

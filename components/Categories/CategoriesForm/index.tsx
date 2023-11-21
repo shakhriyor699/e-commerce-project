@@ -14,13 +14,12 @@ const schema = yup.object().shape({
 }).required();
 
 interface CategoriesFormProps {
-  categories: Category[]
   edit: Category
   editable?: boolean
   setEditable: (editable: boolean) => void
 }
 
-const CategoriesForm: FC<CategoriesFormProps> = ({ categories, edit, editable, setEditable }) => {
+const CategoriesForm: FC<CategoriesFormProps> = ({ edit, editable, setEditable }) => {
   const { register, handleSubmit, reset, setValue } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
