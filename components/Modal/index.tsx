@@ -20,5 +20,4 @@ const Modal: FC<ModalProps> = ({ categoryName, onClick, deleteId, close }) => {
     </div>
   )
 }
-
 export default Modal

@@ -21,7 +21,24 @@ const CategoriesItem: FC<CategoriesItemProps> = ({ categories }) => {
   const [editable, setEditable] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [deleteId, setDeleteId] = useState('')
+  const [properties, setProperties] = useState<any[]>([])
   const router = useRouter()
+
+  const addProperties = () => {
+    setProperties(prev => [...prev, { name: '', value: '' }])
+  }
+
+
+  const removeProperties = (index: number) => {
+    console.log(index)
+    setProperties(prev => {
+      return [...prev].filter((p, pIndex) => {
+        console.log(pIndex !== index);
+
+        return index !== pIndex
+      });
+    })
+  }
 
 
   const handleEdit = async (id: string) => {
@@ -58,12 +75,13 @@ const CategoriesItem: FC<CategoriesItemProps> = ({ categories }) => {
 
   return (
     <>
-      <CategoriesForm setEditable={setEditable} editable={editable} edit={edit} />
+      <CategoriesForm removeProperties={removeProperties} properties={properties} setEditable={setEditable} editable={editable} edit={edit} />
+      <button type='button' onClick={addProperties} className='btn-default text-sm mb-2 bg-gray-700'>Добавить характеристики</button>
       <table className='basic mt-5'>
         <thead>
           <tr>
             <td>Category Name</td>
-            <td>Category parent</td>
+            <td></td>
           </tr>
         </thead>
         <tbody>

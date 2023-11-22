@@ -47,7 +47,13 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
   })
 
 
+
+
   const imageSrc = watch('imageSrc')
+  const categoryId = watch('categoryId')
+
+ 
+
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -89,7 +95,7 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
           ...data,
           categoryId: productById?.categoryId,
           price: Number(data.price),
-          imageSrc: data.imageSrc.map((item: any) => {
+          imageSrc: productById?.imageSrc || data.imageSrc.map((item: any) => {
             return item.dataURL
           })
         }
@@ -104,6 +110,9 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
     router.push('/products')
     router.refresh()
   }
+
+
+
 
 
   return (
@@ -181,6 +190,11 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
               </option>
             ))}
         </select>
+        {/* {
+          categoryId && (
+
+          )
+        } */}
         <label>Product price</label>
         <input  {...register('price', { required: "Please enter price" })} type="number" placeholder="price" />
         <button {...{ disabled: loading }} className="btn-primary">{loading ? 'loading...' : edit ? 'Edit' : 'Create'}</button>
