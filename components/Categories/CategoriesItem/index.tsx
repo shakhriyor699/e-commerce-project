@@ -1,6 +1,5 @@
 'use client'
 import { Category } from '@prisma/client'
-import Link from 'next/link'
 import { FC, useState } from 'react'
 import CategoriesForm from '../CategoriesForm'
 import axios from 'axios'
@@ -24,20 +23,22 @@ const CategoriesItem: FC<CategoriesItemProps> = ({ categories }) => {
   const [properties, setProperties] = useState<any[]>([])
   const router = useRouter()
 
+
+  console.log(properties);
+  
   const addProperties = () => {
-    setProperties(prev => [...prev, { name: '', value: '' }])
+    setProperties([...properties, { id: Date.now(), name: 's', value: 's' }])
   }
 
 
   const removeProperties = (index: number) => {
-    console.log(index)
-    setProperties(prev => {
-      return [...prev].filter((p, pIndex) => {
-        console.log(pIndex !== index);
+    // console.log(index);
 
-        return index !== pIndex
-      });
-    })
+    
+    setProperties(properties.filter((_, i) => {
+      console.log(i, index);
+      return i !== index
+    }))
   }
 
 

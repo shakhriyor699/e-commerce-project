@@ -27,15 +27,19 @@ const CategoriesForm: FC<CategoriesFormProps> = ({ edit, editable, setEditable, 
     resolver: yupResolver(schema),
     defaultValues: {
       name: edit?.name || "",
-      properties: properties
+      properties: properties || []
     }
   })
   const router = useRouter()
 
 
+
+
   if (editable) {
     setValue('name', edit?.name)
   }
+
+
 
 
   const onSubmit = async (data: any) => {
@@ -62,35 +66,43 @@ const CategoriesForm: FC<CategoriesFormProps> = ({ edit, editable, setEditable, 
     }
   }
 
+  const remove = (i: number) => {
+    removeProperties(i)
+    // console.log(i);
+
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex gap-1 items-start flex-col'>
       <input {...register('name', { required: true })} className='mb-0' type="text" placeholder='Category name' />
       <div>
         {
           properties.length > 0 && properties.map((prop: any, index: number) => (
+            
             <div className='mb-2 flex' key={index}>
+              {index}
               <input
                 type="text"
-
-                {...register(`properties.${index}.name` as const)}
+                {...register(`properties.[${index}].name` as const)}
                 placeholder="Property name"
                 className=' mr-2' />
               <input
                 type="text"
-
-                {...register(`properties.${index}.value` as const)}
+                {...register(`properties.[${index}].value` as const)}
                 placeholder="Property value"
                 className='' />
               <button
                 type='button'
                 onClick={() => {
-                  setValue(`properties.${index}.name`, '')
-                  setValue(`properties.${index}.value`, '')
+                  setValue(`properties.[${index}].name`, '')
+                  setValue(`properties.[${index}].value`, '')
                 }}
                 className='btn-primary text-sm '>
                 Очистить
               </button>
-              <button type='button' onClick={() => removeProperties(index)} className="btn-default bg-red-500 text-white px-2">
+              <button type='button' onClick={() => {
+                remove(index)
+              }} className="btn-default bg-red-500 text-white px-2">
                 Удалить
               </button>
             </div>
