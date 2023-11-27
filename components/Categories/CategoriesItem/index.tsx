@@ -15,6 +15,8 @@ interface CategoriesItemProps {
   categories: Category[]
 }
 
+
+
 const CategoriesItem: FC<CategoriesItemProps> = ({ categories }) => {
   const [edit, setEdit] = useState({} as Category)
   const [editable, setEditable] = useState(false)
@@ -23,22 +25,13 @@ const CategoriesItem: FC<CategoriesItemProps> = ({ categories }) => {
   const [properties, setProperties] = useState<any[]>([])
   const router = useRouter()
 
-
-  console.log(properties);
-  
   const addProperties = () => {
-    setProperties([...properties, { id: Date.now(), name: 's', value: 's' }])
-  }
+    setProperties([...properties, { id: Date.now(), name: '', value: '' }])
+  };
 
 
   const removeProperties = (index: number) => {
-    // console.log(index);
-
-    
-    setProperties(properties.filter((_, i) => {
-      console.log(i, index);
-      return i !== index
-    }))
+    setProperties([...properties.filter(list => list.id !== index)])
   }
 
 
@@ -69,15 +62,20 @@ const CategoriesItem: FC<CategoriesItemProps> = ({ categories }) => {
     setDeleteId(id)
   }
 
-
   const handleCloseModal = () => {
     setShowModal(false)
   }
 
+
+
+
+
   return (
     <>
-      <CategoriesForm removeProperties={removeProperties} properties={properties} setEditable={setEditable} editable={editable} edit={edit} />
+      <CategoriesForm properties={properties} setProperties={setProperties} removeProperties={removeProperties} setEditable={setEditable} editable={editable} edit={edit} />
       <button type='button' onClick={addProperties} className='btn-default text-sm mb-2 bg-gray-700'>Добавить характеристики</button>
+
+
       <table className='basic mt-5'>
         <thead>
           <tr>

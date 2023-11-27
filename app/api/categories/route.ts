@@ -37,12 +37,14 @@ export const POST = async (req: Request) => {
   const body = await req.json()
 
   const {
-    name
+    name,
+    properties
   } = body
 
   const category = await prisma.category.create({
     data: {
-      name
+      name,
+      properties
     }
   })
   return NextResponse.json(category)

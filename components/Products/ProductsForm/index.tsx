@@ -25,7 +25,10 @@ const schema = yup.object().shape({
   description: yup.string().required(),
   price: yup.number().required(),
   imageSrc: yup.array().required(),
-  categoryId: yup.string().required()
+  categoryId: yup.string().required(),
+  properties: yup.array().of(yup.object().shape({
+    value: yup.string().required()
+  })).required()
 }).required();
 
 
@@ -35,6 +38,7 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
   const [loading, setLoading] = useState(false)
   const [upLoading, setUpLoading] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
+  const [propertiesToFill, setPropertiesToFill] = useState<any[]>([])
   const { register, handleSubmit, reset, watch, setValue } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -46,14 +50,23 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
     }
   })
 
+  console.log(categories);
 
 
 
   const imageSrc = watch('imageSrc')
   const categoryId = watch('categoryId')
 
- 
 
+
+  useEffect(() => {
+    if (categories.length > 0 && categoryId) {
+      const category = categories.find(item => item.id === categoryId)
+      if (category) {
+        setPropertiesToFill(category.properties)
+      }
+    }
+  }, [categoryId])
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -111,6 +124,10 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
     router.refresh()
   }
 
+
+
+
+  console.log(propertiesToFill);
 
 
 
@@ -181,7 +198,7 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
         <label>Product Description</label>
         <textarea {...register('description', { required: "Please enter your product description" })} placeholder="product description" />
         <label>Categories</label>
-        <select className="mb-0"  {...register('categoryId')} name="categoryId" >
+        <select className="mb-0"  {...register('categoryId')} name="categoryId"  >
           <option value="0">Uncategoryzed</option>
           {categories.length > 0 &&
             categories.map((category) => (
@@ -190,11 +207,22 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
               </option>
             ))}
         </select>
-        {/* {
-          categoryId && (
-
-          )
-        } */}
+        {
+          propertiesToFill.length > 0 && propertiesToFill.map((p, i) => (
+            <div key={i} className="mb-2">
+              <label>{p.name[0].toUpperCase() + p.name.slice(1)}</label>
+              <div>
+                <select {...register(`properties.${i}.value`)}>
+                  {
+                    p.value.split(',').map((v: string) => (
+                      <option key={v} value={v}>{v}</option>
+                    ))
+                  }
+                </select>
+              </div>
+            </div>
+          ))
+        }
         <label>Product price</label>
         <input  {...register('price', { required: "Please enter price" })} type="number" placeholder="price" />
         <button {...{ disabled: loading }} className="btn-primary">{loading ? 'loading...' : edit ? 'Edit' : 'Create'}</button>
