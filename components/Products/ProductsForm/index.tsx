@@ -49,13 +49,23 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
       categoryId: productById?.categoryId || ''
     }
   })
-
-  console.log(categories);
-
-
+  const categoryId = watch('categoryId')
 
   const imageSrc = watch('imageSrc')
-  const categoryId = watch('categoryId')
+
+  console.log(imageSrc);
+
+  useEffect(() => {
+    const getPropertiesToEdit = async () => {
+      const { data } = await axios.get(`/api/categories/${categoryId}`)
+      setPropertiesToFill(data.properties)
+    }
+    if (edit) {
+      getPropertiesToEdit()
+    }
+  }, [edit])
+
+  // console.log(propertiesToFill);
 
 
 
@@ -78,6 +88,8 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
 
 
   const onChange = (imageList: any) => {
+    console.log(imageList);
+
     setUpLoading(true)
     setValue('imageSrc', imageList);
     setUpLoading(false)
@@ -106,12 +118,17 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
       try {
         const newData = {
           ...data,
-          categoryId: productById?.categoryId,
+          categoryId: categoryId,
           price: Number(data.price),
-          imageSrc: productById?.imageSrc || data.imageSrc.map((item: any) => {
+          imageSrc: imageSrc.map((item: any) => {
             return item.dataURL
-          })
+          }) || data.imageSrc.map((item: any) => {
+            return item.dataURL
+          }),
+
         }
+
+
         await axios.patch(`/api/products/${productById?.id}`, newData)
         reset()
         toast.success('Товар успешно изменен')
@@ -123,11 +140,6 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
     router.push('/products')
     router.refresh()
   }
-
-
-
-
-  console.log(propertiesToFill);
 
 
 
@@ -154,7 +166,7 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
               isDragging,
               dragProps,
             }) => (
-              <div className={`upload__image-wrapper flex ${imageList.length > 0 && 'gap-4'}`}>
+              <div className={`upload__image-wrapper flex items-center ${imageList.length > 0 && 'gap-4'}`}>
                 <button
                   className="gap-2 h-32 border text-center flex items-center justify-center p-2 rounded-md bg-gray-200"
                   type="button"
@@ -175,7 +187,7 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
                   ) : (
                     <div className="flex gap-7 -order-1">
                       {imageList.map((image, index) => (
-                        <div key={index} className="image-item relative w-max">
+                        <div key={index} className="image-item relative w-max p-5">
                           <Image src={`${image.dataURL ? image.dataURL : productById?.imageSrc}`} alt="" width={200} height={200} />
                           <div className="image-item__btn-wrapper">
                             <button type='button' onClick={() => onImageUpdate(index)}>Update</button>
@@ -202,20 +214,20 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
           <option value="0">Uncategoryzed</option>
           {categories.length > 0 &&
             categories.map((category) => (
-              <option key={category.id} value={category.id} selected={category.id === productById?.categoryId}>
+              <option key={category.id} value={category.id} selected={category.id === categoryId}>
                 {category.name}
               </option>
             ))}
         </select>
         {
           propertiesToFill.length > 0 && propertiesToFill.map((p, i) => (
-            <div key={i} className="mb-2">
-              <label>{p.name[0].toUpperCase() + p.name.slice(1)}</label>
-              <div>
-                <select {...register(`properties.${i}.value`)}>
+            <div key={i} className="mb-2 mt-2 flex">
+              <label className="mr-2">{p.name[0].toUpperCase() + p.name.slice(1)}</label>
+              <div className="w-full ">
+                <select {...register(`properties.${i}.value`)} >
                   {
                     p.value.split(',').map((v: string) => (
-                      <option key={v} value={v}>{v}</option>
+                      <option key={v} value={v} selected={categoryId === productById?.categoryId}>{v}</option>
                     ))
                   }
                 </select>

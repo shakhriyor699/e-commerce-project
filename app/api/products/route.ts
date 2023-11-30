@@ -25,7 +25,7 @@ export const POST = async (req: Request) => {
       price,
       imageSrc,
       userId: currentUser.id,
-      categoryId: body.categoryId
+      categoryId: categoryId
     }
   })
   return NextResponse.json(product)

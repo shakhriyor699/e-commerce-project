@@ -6,7 +6,6 @@ import { getCategories } from "@/actions/getCategories";
 
 interface ProductEditProps {
   productById: SafeProduct | null
-  // categories: Category[]
 }
 
 

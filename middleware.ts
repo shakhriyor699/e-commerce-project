@@ -4,5 +4,7 @@ export const config = {
   matcher: [
     '/products/:path*',
     '/categories/:path*',
+    '/api/:path*'
   ]
 }
+

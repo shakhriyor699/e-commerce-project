@@ -3,6 +3,7 @@ import { NextResponse } from "next/server"
 import prisma from "@/libs/prisma"
 
 
+
 // export const POST = async (req: Request) => {
 //   const currentUser = await getCurrentUser()
 
@@ -33,6 +34,7 @@ export const POST = async (req: Request) => {
   if (!currentUser) {
     return NextResponse.error()
   }
+
 
   const body = await req.json()
 
