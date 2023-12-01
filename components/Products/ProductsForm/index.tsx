@@ -2,7 +2,7 @@
 import { SafeProduct } from "@/app/types"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useRouter } from "next/navigation"
-import { FC, useEffect, useState } from "react"
+import { FC, useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as yup from "yup";
 import ImageUploading from 'react-images-uploading';
@@ -15,7 +15,6 @@ import { Category } from "@prisma/client"
 
 interface ProductFormProps {
   productById?: SafeProduct | null
-  categories?: Category[]
   edit?: boolean
   title: string
 }
@@ -50,51 +49,43 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
     }
   })
   const categoryId = watch('categoryId')
-
   const imageSrc = watch('imageSrc')
 
-  console.log(imageSrc);
+  const getPropertiesToEdit = useCallback(async () => {
+    const { data } = await axios.get(`/api/categories/${categoryId}`)
+    setPropertiesToFill(data.properties)
+  }, [categoryId])
 
   useEffect(() => {
-    const getPropertiesToEdit = async () => {
-      const { data } = await axios.get(`/api/categories/${categoryId}`)
-      setPropertiesToFill(data.properties)
-    }
-    if (edit) {
+    if (edit && categoryId) {
       getPropertiesToEdit()
     }
-  }, [edit])
-
-  // console.log(propertiesToFill);
-
-
+  }, [edit, categoryId, getPropertiesToEdit])
 
   useEffect(() => {
     if (categories.length > 0 && categoryId) {
-      const category = categories.find(item => item.id === categoryId)
+      const category = categories?.find(item => item.id === categoryId)
       if (category) {
         setPropertiesToFill(category.properties)
       }
     }
-  }, [categoryId])
+  }, [edit, categoryId])
+
+  const fetchCategories = useCallback(async () => {
+    const { data } = await axios.get('/api/categories')
+    setCategories(data)
+  }, [])
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const { data } = await axios.get('/api/categories')
-      setCategories(data)
-    }
     fetchCategories()
   }, [])
 
 
   const onChange = (imageList: any) => {
-    console.log(imageList);
-
     setUpLoading(true)
     setValue('imageSrc', imageList);
     setUpLoading(false)
   };
-
 
   const onSubmit = async (data: any) => {
     setLoading(true)
@@ -103,14 +94,16 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
         const newData = {
           ...data,
           price: Number(data.price),
-          imageSrc: data.imageSrc.map((item: any) => {
-            return item.dataURL
-          })
+          imageSrc: imageSrc
         }
         await axios.post('/api/products', newData)
         reset()
+        router.push('/products')
+        router.refresh()
         toast.success('Товар успешно создан')
       } catch (error) {
+        router.push('/products')
+        router.refresh()
         toast.error('Произошла ошибка при создании')
       }
     }
@@ -120,29 +113,22 @@ const ProductsForm: FC<ProductFormProps> = ({ productById, title, edit }) => {
           ...data,
           categoryId: categoryId,
           price: Number(data.price),
-          imageSrc: imageSrc.map((item: any) => {
-            return item.dataURL
-          }) || data.imageSrc.map((item: any) => {
-            return item.dataURL
-          }),
-
+          imageSrc: imageSrc,
         }
-
-
         await axios.patch(`/api/products/${productById?.id}`, newData)
         reset()
+        router.push('/products')
+        router.refresh()
         toast.success('Товар успешно изменен')
       } catch (error) {
+        router.push('/products')
+        router.refresh()
         toast.error('Произошла ошибка при изменении')
       }
     }
     setLoading(false)
-    router.push('/products')
-    router.refresh()
+
   }
-
-
-
 
   return (
     <>

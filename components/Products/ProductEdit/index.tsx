@@ -9,12 +9,11 @@ interface ProductEditProps {
 }
 
 
-const ProductEdit: FC<ProductEditProps> = async ({ productById }) => {
-  const categories = await getCategories()
-  
+const ProductEdit: FC<ProductEditProps> = ({ productById }) => {
+
   return (
     <>
-      <ProductsForm title='Изменить' productById={productById} edit categories={categories} />
+      <ProductsForm title='Изменить' productById={productById} edit  />
     </>
   )
 }

@@ -22,8 +22,8 @@ const DeleteIdPage: FC<DeleteIdPageProps> = ({ params: { deleteId } }) => {
   const onDelete = async () => {
     try {
       await axios.delete(`/api/products/${deleteId}`)
-      toast.success('Товар успешно удален')
       goBack()
+      toast.success('Товар успешно удален')
     } catch (error) {
       toast.error('Произошла ошибка при удалении')
     }

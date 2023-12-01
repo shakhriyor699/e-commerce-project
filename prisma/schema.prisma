@@ -48,17 +48,17 @@ model Product {
   userId      String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  imageSrc    String[]
+  imageSrc    Json[]
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   categoryId  String?
   Category    Category? @relation(fields: [categoryId], references: [id])
 }
 
 model Category {
-  id        String    @id @default(cuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  product   Product[]
+  id         String    @id @default(cuid())
+  name       String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  product    Product[]
   properties Json[]
 }
